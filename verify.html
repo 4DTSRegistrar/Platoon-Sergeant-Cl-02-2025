@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate Verification</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7faff;
+      padding: 20px;
+      color: #222;
+    }
+    h1 { color: #004aad; }
+    .batch-info {
+      background: #e6f0ff;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-left: 5px solid #004aad;
+      border-radius: 5px;
+    }
+    button {
+      background: #004aad;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    button:hover { background: #00347a; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #004aad;
+      color: white;
+    }
+    tr:hover { background-color: #f1f5ff; }
+  </style>
+</head>
+<body>
+  <h1>Certificate Verification Portal</h1>
+  <div class="batch-info">
+    <strong>Training:</strong> Platoon Sergeant Training<br>
+    <strong>Batch:</strong> Class 02-2025<br>
+    <strong>Date Published:</strong> 10/30/2025
+  </div>
+  <button onclick="openBatch()">📄 Open Batch Certificate (PDF)</button>
+  <h2>Students List</h2>
+  <table id="students-table">
+    <thead><tr><th>CERT ID</th><th>NAME</th><th>COURSE</th><th>DATE</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    const batchPDF = "certificates/Certificates.pdf";
+    async function loadStudents() {
+      const res = await fetch('students.csv');
+      const text = await res.text();
+      const lines = text.trim().split(/\r?\n/);
+      const tbody = document.querySelector('#students-table tbody');
+      tbody.innerHTML = '';
+      for (let i = 1; i < lines.length; i++) {
+        const [certid, name, course, date] = lines[i].split(',');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${certid}</td><td>${name}</td><td>${course}</td><td>${date}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+    function openBatch() { window.open(batchPDF, '_blank'); }
+    loadStudents();
+  </script>
+</body>
+</html>
